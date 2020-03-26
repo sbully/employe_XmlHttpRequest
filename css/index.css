@@ -1,0 +1,34 @@
+:root {
+    /* couleur de fond des lignes du tableau*/
+    --gray: #CCCCCC;
+    /* couleur bouton duplicate*/
+    --boutduplicatecolor: #3298DC;
+    /*couleur bouton Delete*/
+    --boutdeletecolor: #F14668;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+table,
+td,
+th {
+    padding: 1em;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+table td {
+    padding: 0.4em 0 0.4em 1em;
+}
+
+table th {}
+
+table th:last-child {}
+
+footer {
+    margin-top: 2em;
+}
