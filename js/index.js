@@ -109,12 +109,13 @@ function addRow(employee, tbody) {
     let DuplicateBut = document.createElement('button');
     DuplicateBut.id = "DuplicateBut";
     DuplicateBut.innerHTML = "Duplicate"
-
+    DuplicateBut.addEventListener('click', onClickDuplicate);
     tdAction.appendChild(DuplicateBut);
 
     let DeleteteBut = document.createElement('button');
     DeleteteBut.id = "DeleteteBut";
     DeleteteBut.innerHTML = "Delete";
+    DeleteteBut.addEventListener('click', onClickDelete);
     tdAction.appendChild(DeleteteBut);
 
 
@@ -246,6 +247,12 @@ function createLastRow() {
     tr.appendChild(td4);
 
     tfoot.appendChild(tr);
+}
 
+function onClickDuplicate(event) {
+    console.log(event);
+}
+
+function onClickDelete(event) {
 
 }
