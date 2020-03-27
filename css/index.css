@@ -32,3 +32,10 @@ table th:last-child {}
 footer {
     margin-top: 2em;
 }
+
+#imgsort {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+    padding-left: 0.5em;
+}

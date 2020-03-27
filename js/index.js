@@ -1,8 +1,15 @@
 let xmlrequest = new XMLHttpRequest();
-let tab = document.getElementById("table");
+let tab = document.querySelector("table");
+/* let tbody = tab.querySelector('tbody');*/
+/*<-- je recupere le body de ma table */
+/* let tabTr = tbody.querySelectorAll('tr'); */
+/*<-- je recupere toute les lignes TR dans mon tbody */
 
 let totalSalary = new Number(0);
 let nbmEmployee;
+
+
+let asc = false;
 
 xmlrequest.addEventListener("progress", updateProgress, false);
 xmlrequest.addEventListener("load", transferComplete, false);
@@ -69,7 +76,7 @@ function addRow(employee, tbody) {
                 tr.appendChild(tdname);
                 let tabName = new String(value).split(" ");
                 let Email = tabName[0][0].toLowerCase() + "." + tabName[1].toLowerCase() + "@email.com";
-                console.log(Email);
+                /*                 console.log(Email); */
 
                 let tdMail = document.createElement('td');
                 tdMail.innerHTML = Email;
@@ -137,7 +144,17 @@ function createHeaderTab(tabkey) {
     tr.appendChild(thEmail);
 
     let thSamary = document.createElement('th');
+    thSamary.className = "thmonthlySalary";
     thSamary.innerHTML = "Monthly Salary";
+    thSamary.addEventListener('click', onclickSort);
+
+    let imgsort = document.createElement('img');
+    imgsort.id = "imgsort";
+    imgsort.src = "./img/doubleArrow.png";
+
+
+    thSamary.appendChild(imgsort);
+
     tr.appendChild(thSamary);
 
     let thYear = document.createElement('th');
@@ -151,6 +168,52 @@ function createHeaderTab(tabkey) {
 
     thead.appendChild(tr);
 }
+
+function onclickSort(event) {
+    let col;
+    if (event.target.localName == 'img') {
+        col = (event.target.offsetParent.cellIndex);
+
+    } else {
+        col = (event.target.cellIndex);
+
+    }
+
+    asc = !asc;
+    console.log(asc);
+    let img = document.querySelector("#imgsort");
+    if (!asc)
+        img.src = "./img/ArrowUp.png";
+    else
+        img.src = "./img/ArrowDown.png";
+
+    let tbody = tab.querySelector('tbody');
+
+    let tabTr = Array.from(tbody.querySelectorAll('tr'));
+
+
+    let sortabTr = tabTr.sort(tryCompare(col));
+
+    sortabTr.forEach(function(tr) {
+        tbody.appendChild(tr);
+    })
+}
+
+function tryCompare(index) {
+    return function Compare(row1, row2) {
+        let val1 = new Number(new String(row1.children[index].textContent).split(" ")[0]);
+        let val2 = new Number(new String(row2.children[index].textContent).split(" ")[0]);
+
+        if (val1 > val2)
+            return (asc ? -1 : 1);
+        if (val1 < val2)
+            return (asc ? 1 : -1);
+        if (val1 == val2)
+            return 0;
+
+    };
+}
+
 
 function createLastRow() {
 
