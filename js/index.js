@@ -5,7 +5,7 @@ let tab = document.querySelector("table");
 /* let tabTr = tbody.querySelectorAll('tr'); */
 /*<-- je recupere toute les lignes TR dans mon tbody */
 
-let totalSalary = new Number(0);
+
 let nbmEmployee;
 
 
@@ -55,6 +55,7 @@ function tablePopulate(json) {
     });
 
     createLastRow();
+    updateTab();
 }
 
 function addRow(employee, tbody) {
@@ -65,6 +66,7 @@ function addRow(employee, tbody) {
         switch (key) {
             case "id":
                 let tdid = document.createElement('td');
+                tdid.id = "id";
                 tdid.innerHTML = value;
                 tr.appendChild(tdid);
                 break;
@@ -72,11 +74,11 @@ function addRow(employee, tbody) {
             case "employee_name":
 
                 let tdname = document.createElement('td');
+                tdname.id = 'name';
                 tdname.innerHTML = value;
                 tr.appendChild(tdname);
                 let tabName = new String(value).split(" ");
                 let Email = tabName[0][0].toLowerCase() + "." + tabName[1].toLowerCase() + "@email.com";
-                /*                 console.log(Email); */
 
                 let tdMail = document.createElement('td');
                 tdMail.innerHTML = Email;
@@ -85,6 +87,7 @@ function addRow(employee, tbody) {
                 break;
             case "employee_age":
                 let tdAge = document.createElement('td');
+                tdAge.id = 'age';
                 let date = new Date().getFullYear() - value;
                 tdAge.innerHTML = date;
                 tr.appendChild(tdAge);
@@ -94,9 +97,9 @@ function addRow(employee, tbody) {
 
             case "employee_salary":
                 let tdSalary = document.createElement('td');
+                tdSalary.id = 'salary';
                 let salary = (value / 12).toFixed(2);
                 tdSalary.innerHTML = salary + " €";
-                totalSalary += new Number(salary);
                 tr.appendChild(tdSalary);
                 break;
             default:
@@ -108,13 +111,20 @@ function addRow(employee, tbody) {
     let tdAction = document.createElement('td');
     let DuplicateBut = document.createElement('button');
     DuplicateBut.id = "DuplicateBut";
-    DuplicateBut.innerHTML = "Duplicate"
+
+    let iclass = document.createElement('i');
+    iclass.className = 'fas fa-copy';
+    iclass.innerHTML = 'Duplicate';
+    DuplicateBut.appendChild(iclass);
     DuplicateBut.addEventListener('click', onClickDuplicate);
     tdAction.appendChild(DuplicateBut);
 
     let DeleteteBut = document.createElement('button');
-    DeleteteBut.id = "DeleteteBut";
-    DeleteteBut.innerHTML = "Delete";
+    DeleteteBut.id = "DeleteBut";
+    let iclassd = document.createElement('i');
+    iclassd.className = 'fas fa-trash';
+    iclassd.innerHTML = 'Delete';
+    DeleteteBut.appendChild(iclassd);
     DeleteteBut.addEventListener('click', onClickDelete);
     tdAction.appendChild(DeleteteBut);
 
@@ -181,7 +191,7 @@ function onclickSort(event) {
     }
 
     asc = !asc;
-    console.log(asc);
+    /*     console.log(asc); */
     let img = document.querySelector("#imgsort");
     if (!asc)
         img.src = "./img/ArrowUp.png";
@@ -219,40 +229,86 @@ function tryCompare(index) {
 function createLastRow() {
 
     let tfoot = document.createElement('tfoot');
+
     tfoot.id = "tfoot";
     tab.appendChild(tfoot);
 
     let tr = document.createElement('tr');
 
     let tdid = document.createElement('td');
-    tdid.innerHTML = document.getElementById("table").rows.length - 1;
+    tdid.id = 'id';
+    /*     tdid.innerHTML = tabTr.length; */
     tr.appendChild(tdid);
 
     let td1 = document.createElement('td');
-    td1.id = "td1";
-    td1.style.colspan = "2";
+    /*     td1.id = "td1"; */
+    td1.colSpan = "2";
     tr.appendChild(td1);
 
 
-    let td2 = document.createElement('td');
-    tr.appendChild(td2);
-
     let tdTotal = document.createElement('td');
-    tdTotal.innerHTML = totalSalary.toFixed(2) + " €";
+    tdTotal.id = 'totalSalary';
+
+
+
+    /*     tdTotal.innerHTML = totalSal.toFixed(2) + " €"; */
     tr.appendChild(tdTotal);
 
     let td3 = document.createElement('td');
+    td3.colSpan = "2";
     tr.appendChild(td3);
-    let td4 = document.createElement('td');
-    tr.appendChild(td4);
 
-    tfoot.appendChild(tr);
+
+    tfoot.append(tr);
+}
+
+function updateTab() {
+    let tabTr = Array.from(document.querySelector('tbody').querySelectorAll('tr'));
+    if (tabTr.length != 0) {
+        UpdateValue(tabTr);
+    } else {
+        emptyTab(tabTr);
+        UpdateValue(tabTr);
+    }
+
 }
 
 function onClickDuplicate(event) {
-    console.log(event);
+    let duplicateRow = event.target.closest('tr').cloneNode(true);
+    duplicateRow.querySelector('#DuplicateBut').addEventListener('click', onClickDuplicate);
+    duplicateRow.children['id'].innerHTML = tab.querySelector('tbody').querySelectorAll('tr').length + 1;
+    duplicateRow.querySelector('#DeleteBut').addEventListener('click', onClickDelete);
+    document.querySelector("tbody").appendChild(duplicateRow);
+
+    updateTab();
 }
 
 function onClickDelete(event) {
+    let index = event.target.closest('tr').rowIndex;
+    console.log(index);
+    tab.deleteRow(index);
+    updateTab();
+}
+
+function UpdateValue(tabTr) {
+    let totalSal = new Number(0);
+    tabTr.forEach(function(row) {
+        let salary = new Number(new String(row.children['salary'].textContent).split(" ")[0]);
+        totalSal += salary;
+    });
+    let footer = tab.querySelector('tfoot').querySelector('tr');
+    footer.children['id'].innerHTML = tabTr.length;
+    footer.children['totalSalary'].innerHTML = totalSal.toFixed(2) + " €";
+}
+
+function emptyTab(tabTr) {
+
+    let trempty = document.createElement('tr');
+    let tdempty = document.createElement('td');
+    tdempty.id = "tdempty";
+    tdempty.colSpan = "6";
+    tdempty.innerHTML = "Aucune donnée à afficher"
+    trempty.appendChild(tdempty);
+    document.querySelector("tbody").appendChild(trempty);
 
 }
