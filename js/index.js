@@ -1,10 +1,5 @@
 let xmlrequest = new XMLHttpRequest();
 let tab = document.querySelector("table");
-/* let tbody = tab.querySelector('tbody');*/
-/*<-- je recupere le body de ma table */
-/* let tabTr = tbody.querySelectorAll('tr'); */
-/*<-- je recupere toute les lignes TR dans mon tbody */
-
 
 let nbmEmployee;
 
@@ -221,7 +216,6 @@ function tryCompare(index) {
             return (asc ? 1 : -1);
         if (val1 == val2)
             return 0;
-
     };
 }
 
@@ -229,7 +223,6 @@ function tryCompare(index) {
 function createLastRow() {
 
     let tfoot = document.createElement('tfoot');
-
     tfoot.id = "tfoot";
     tab.appendChild(tfoot);
 
@@ -237,11 +230,9 @@ function createLastRow() {
 
     let tdid = document.createElement('td');
     tdid.id = 'id';
-    /*     tdid.innerHTML = tabTr.length; */
     tr.appendChild(tdid);
 
     let td1 = document.createElement('td');
-    /*     td1.id = "td1"; */
     td1.colSpan = "2";
     tr.appendChild(td1);
 
@@ -249,9 +240,6 @@ function createLastRow() {
     let tdTotal = document.createElement('td');
     tdTotal.id = 'totalSalary';
 
-
-
-    /*     tdTotal.innerHTML = totalSal.toFixed(2) + " €"; */
     tr.appendChild(tdTotal);
 
     let td3 = document.createElement('td');
